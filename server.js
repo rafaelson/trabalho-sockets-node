@@ -5,11 +5,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const board = new Array(9).fill(undefined);
 let connected = [];
 let id = 0;
-let plays = 0;
-let currentPlayer = "X";
 
 app.use(express.static("static"));
 
@@ -17,10 +14,65 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-function alternatePlayer(play) {
-  if (play == "X") return "O";
-  else return "X";
-}
+const game = (() => {
+  const board = new Array(9).fill(undefined);
+  let playNumber = 0;
+  let currentPlayer;
+
+  const alternatePlayer = (plays) => {
+    if (plays % 2 == 0) return "X";
+    else return "O";
+  };
+
+  const checkBoard = () => {
+    if (
+      diagonalChecks() == 1 ||
+      horizontalChecks() == 1 ||
+      verticalChecks() == 1
+    ) {
+      win();
+    }
+  };
+
+  const verticalChecks = function () {
+    for (i = 0; i <= 3; i++) {
+      if (
+        board[i] == board[i + 3] &&
+        board[i + 3] == board[i + 6] &&
+        board[i] != undefined
+      ) {
+        return 1;
+      }
+    }
+  };
+
+  const horizontalChecks = function () {
+    for (i = 0; i <= 6; i += 3) {
+      if (
+        board[i] == board[i + 1] &&
+        board[i + 1] == board[i + 2] &&
+        board[i] != undefined
+      ) {
+        return 1;
+      }
+    }
+  };
+
+  const diagonalChecks = function () {
+    if (
+      (board[0] == board[4] && board[4] == board[8] && board[0] != undefined) ||
+      (board[2] == board[4] && board[4] == board[6] && board[2] != undefined)
+    ) {
+      return 1;
+    }
+  };
+
+  const win = (player) => {
+    // io.emit("clear");
+    board.forEach((element, index) => (board[index] = undefined));
+  };
+  return { board, currentPlayer, playNumber, alternatePlayer, checkBoard };
+})();
 
 io.on("connection", (socket) => {
   console.log("client conectado");
@@ -33,12 +85,12 @@ io.on("connection", (socket) => {
   id++;
 
   socket.on("play", (play) => {
-    if (plays % 2 == 0) currentPlayer = "X";
-    else currentPlayer = "O";
-    if (currentPlayer != play.player) return;
-    board[play.position] = play.player;
-    io.emit("boardUpdate", board);
-    plays++;
+    game.currentPlayer = game.alternatePlayer(game.playNumber);
+    if (game.currentPlayer != play.player) return;
+    game.board[play.position] = play.player;
+    game.checkBoard();
+    io.emit("boardUpdate", game.board);
+    game.playNumber++;
   });
 
   socket.on("disconnect", () => {

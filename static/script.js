@@ -37,63 +37,63 @@ function updateBoard(board) {
 //     checkBoard();
 //   };
 
-//   const checkBoard = function () {
-//     if (
-//       diagonalChecks() == 1 ||
-//       horizontalChecks() == 1 ||
-//       verticalChecks() == 1
-//     ) {
-//       if (lastWinner == "X") {
-//         player1.score++;
-//       } else {
-//         player2.score++;
-//       }
-//       setTimeout(() => {
-//         displayController.updateScore();
-//         cleanBoard();
-//       }, 100);
+// const checkBoard = function () {
+//   if (
+//     diagonalChecks() == 1 ||
+//     horizontalChecks() == 1 ||
+//     verticalChecks() == 1
+//   ) {
+//     if (lastWinner == "X") {
+//       player1.score++;
 //     } else {
-//       if (count == 9) {
-//         setTimeout(cleanBoard, 300);
-//       }
+//       player2.score++;
 //     }
-//   };
-
-//   const verticalChecks = function () {
-//     for (i = 0; i <= 3; i++) {
-//       if (
-//         board[i] == board[i + 3] &&
-//         board[i + 3] == board[i + 6] &&
-//         board[i] != undefined
-//       ) {
-//         lastWinner = board[i];
-//         return 1;
-//       }
+//     setTimeout(() => {
+//       displayController.updateScore();
+//       cleanBoard();
+//     }, 100);
+//   } else {
+//     if (count == 9) {
+//       setTimeout(cleanBoard, 300);
 //     }
-//   };
+//   }
+// };
 
-//   const horizontalChecks = function () {
-//     for (i = 0; i <= 6; i += 3) {
-//       if (
-//         board[i] == board[i + 1] &&
-//         board[i + 1] == board[i + 2] &&
-//         board[i] != undefined
-//       ) {
-//         lastWinner = board[i];
-//         return 1;
-//       }
-//     }
-//   };
-
-//   const diagonalChecks = function () {
+// const verticalChecks = function () {
+//   for (i = 0; i <= 3; i++) {
 //     if (
-//       (board[0] == board[4] && board[4] == board[8] && board[0] != undefined) ||
-//       (board[2] == board[4] && board[4] == board[6] && board[2] != undefined)
+//       board[i] == board[i + 3] &&
+//       board[i + 3] == board[i + 6] &&
+//       board[i] != undefined
 //     ) {
 //       lastWinner = board[i];
 //       return 1;
 //     }
-//   };
+//   }
+// };
+
+// const horizontalChecks = function () {
+//   for (i = 0; i <= 6; i += 3) {
+//     if (
+//       board[i] == board[i + 1] &&
+//       board[i + 1] == board[i + 2] &&
+//       board[i] != undefined
+//     ) {
+//       lastWinner = board[i];
+//       return 1;
+//     }
+//   }
+// };
+
+// const diagonalChecks = function () {
+//   if (
+//     (board[0] == board[4] && board[4] == board[8] && board[0] != undefined) ||
+//     (board[2] == board[4] && board[4] == board[6] && board[2] != undefined)
+//   ) {
+//     lastWinner = board[i];
+//     return 1;
+//   }
+// };
 
 //   const reset = function () {
 //     board = [];
