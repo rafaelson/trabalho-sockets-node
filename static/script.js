@@ -6,105 +6,112 @@ socket.on("player", (msg) => {
   console.log(currentPlayer);
 });
 
-const player = function () {
-  let score = 0;
-  return { score };
-};
+socket.on("boardUpdate", (b) => updateBoard(b));
 
-const game = (function () {
-  let board = [];
-  let count = 0;
-  let player1 = player();
-  let player2 = player();
-  let lastWinner;
+function updateBoard(board) {
+  const squares = document.querySelectorAll(".square");
+  squares.forEach((sq, index) => (sq.textContent = board[index]));
+}
 
-  const move = function (location) {
-    if (count % 2 == 0) {
-      displayController.changeSquare(location, "X");
-      board[location.dataset.number] = "X";
-    } else {
-      displayController.changeSquare(location, "O");
-      board[location.dataset.number] = "O";
-    }
-    count++;
-    checkBoard();
-  };
+// const player = function () {
+//   let score = 0;
+//   return { score };
+// };
 
-  const checkBoard = function () {
-    if (
-      diagonalChecks() == 1 ||
-      horizontalChecks() == 1 ||
-      verticalChecks() == 1
-    ) {
-      if (lastWinner == "X") {
-        player1.score++;
-      } else {
-        player2.score++;
-      }
-      setTimeout(() => {
-        displayController.updateScore();
-        cleanBoard();
-      }, 100);
-    } else {
-      if (count == 9) {
-        setTimeout(cleanBoard, 300);
-      }
-    }
-  };
+// const game = (function () {
+//   let board = [];
+//   let count = 0;
+//   let player1 = player();
+//   let player2 = player();
+//   let lastWinner;
 
-  const verticalChecks = function () {
-    for (i = 0; i <= 3; i++) {
-      if (
-        board[i] == board[i + 3] &&
-        board[i + 3] == board[i + 6] &&
-        board[i] != undefined
-      ) {
-        lastWinner = board[i];
-        return 1;
-      }
-    }
-  };
+//   const move = function (location) {
+//     if (count % 2 == 0) {
+//       displayController.changeSquare(location, "X");
+//       board[location.dataset.number] = "X";
+//     } else {
+//       displayController.changeSquare(location, "O");
+//       board[location.dataset.number] = "O";
+//     }
+//     count++;
+//     checkBoard();
+//   };
 
-  const horizontalChecks = function () {
-    for (i = 0; i <= 6; i += 3) {
-      if (
-        board[i] == board[i + 1] &&
-        board[i + 1] == board[i + 2] &&
-        board[i] != undefined
-      ) {
-        lastWinner = board[i];
-        return 1;
-      }
-    }
-  };
+//   const checkBoard = function () {
+//     if (
+//       diagonalChecks() == 1 ||
+//       horizontalChecks() == 1 ||
+//       verticalChecks() == 1
+//     ) {
+//       if (lastWinner == "X") {
+//         player1.score++;
+//       } else {
+//         player2.score++;
+//       }
+//       setTimeout(() => {
+//         displayController.updateScore();
+//         cleanBoard();
+//       }, 100);
+//     } else {
+//       if (count == 9) {
+//         setTimeout(cleanBoard, 300);
+//       }
+//     }
+//   };
 
-  const diagonalChecks = function () {
-    if (
-      (board[0] == board[4] && board[4] == board[8] && board[0] != undefined) ||
-      (board[2] == board[4] && board[4] == board[6] && board[2] != undefined)
-    ) {
-      lastWinner = board[i];
-      return 1;
-    }
-  };
+//   const verticalChecks = function () {
+//     for (i = 0; i <= 3; i++) {
+//       if (
+//         board[i] == board[i + 3] &&
+//         board[i + 3] == board[i + 6] &&
+//         board[i] != undefined
+//       ) {
+//         lastWinner = board[i];
+//         return 1;
+//       }
+//     }
+//   };
 
-  const reset = function () {
-    board = [];
-    count = 0;
-    player1.score = 0;
-    player2.score = 0;
-    displayController.cleanSquares();
-    displayController.updateScore();
-  };
+//   const horizontalChecks = function () {
+//     for (i = 0; i <= 6; i += 3) {
+//       if (
+//         board[i] == board[i + 1] &&
+//         board[i + 1] == board[i + 2] &&
+//         board[i] != undefined
+//       ) {
+//         lastWinner = board[i];
+//         return 1;
+//       }
+//     }
+//   };
 
-  const cleanBoard = function () {
-    board = [];
-    count = 0;
-    displayController.cleanSquares();
-  };
+//   const diagonalChecks = function () {
+//     if (
+//       (board[0] == board[4] && board[4] == board[8] && board[0] != undefined) ||
+//       (board[2] == board[4] && board[4] == board[6] && board[2] != undefined)
+//     ) {
+//       lastWinner = board[i];
+//       return 1;
+//     }
+//   };
 
-  return { player1, player2, move, reset };
-})();
+//   const reset = function () {
+//     board = [];
+//     count = 0;
+//     player1.score = 0;
+//     player2.score = 0;
+//     displayController.cleanSquares();
+//     displayController.updateScore();
+//   };
+
+//   const cleanBoard = function () {
+//     board = [];
+//     count = 0;
+//     displayController.cleanSquares();
+//   };
+
+//   return { player1, player2, move, reset };
+// })();
 
 const displayController = (function () {
   const initializeSquares = (function () {
@@ -113,7 +120,12 @@ const displayController = (function () {
       squares.forEach((sq) =>
         sq.addEventListener("click", (e) => {
           if (e.currentTarget.textContent == "") {
-            game.move(e.currentTarget);
+            // game.move(e.currentTarget);
+            // console.log(e.currentTarget.dataset.number);
+            socket.emit("play", {
+              player: currentPlayer,
+              position: e.currentTarget.dataset.number,
+            });
           }
         })
       );

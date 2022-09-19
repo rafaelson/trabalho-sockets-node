@@ -8,6 +8,8 @@ const io = new Server(server);
 const board = new Array(9).fill(undefined);
 let connected = [];
 let id = 0;
+let plays = 0;
+let currentPlayer = "X";
 
 app.use(express.static("static"));
 
@@ -15,13 +17,10 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-// app.get("/x", (req, res) => {
-//   res.sendFile(__dirname + "/index.html");
-// });
-
-// app.get("/o", (req, res) => {
-//   res.sendFile(__dirname + "/index.html");
-// });
+function alternatePlayer(play) {
+  if (play == "X") return "O";
+  else return "X";
+}
 
 io.on("connection", (socket) => {
   console.log("client conectado");
@@ -32,6 +31,16 @@ io.on("connection", (socket) => {
   }
   socket.emit("player", connected[id]);
   id++;
+
+  socket.on("play", (play) => {
+    if (plays % 2 == 0) currentPlayer = "X";
+    else currentPlayer = "O";
+    if (currentPlayer != play.player) return;
+    board[play.position] = play.player;
+    io.emit("boardUpdate", board);
+    plays++;
+  });
+
   socket.on("disconnect", () => {
     if (id > 0) id--;
     connected.pop();
