@@ -30,7 +30,16 @@ const game = (() => {
       horizontalChecks() == 1 ||
       verticalChecks() == 1
     ) {
+      return 1;
+    }
+  };
+
+  const round = (play) => {
+    board[play.position] = play.player;
+    if (checkBoard()) {
       win();
+    } else {
+      io.emit("boardUpdate", board);
     }
   };
 
@@ -68,10 +77,18 @@ const game = (() => {
   };
 
   const win = (player) => {
-    // io.emit("clear");
+    io.emit("boardUpdate", board);
+    io.emit("boardClear");
     board.forEach((element, index) => (board[index] = undefined));
   };
-  return { board, currentPlayer, playNumber, alternatePlayer, checkBoard };
+  return {
+    board,
+    currentPlayer,
+    playNumber,
+    alternatePlayer,
+    checkBoard,
+    round,
+  };
 })();
 
 io.on("connection", (socket) => {
@@ -87,9 +104,8 @@ io.on("connection", (socket) => {
   socket.on("play", (play) => {
     game.currentPlayer = game.alternatePlayer(game.playNumber);
     if (game.currentPlayer != play.player) return;
-    game.board[play.position] = play.player;
-    game.checkBoard();
-    io.emit("boardUpdate", game.board);
+    game.round(play);
+    // io.emit("boardUpdate", game.board);
     game.playNumber++;
   });
 
