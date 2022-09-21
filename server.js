@@ -44,7 +44,7 @@ const game = (() => {
     }
   };
 
-  const verticalChecks = function () {
+  const verticalChecks = () => {
     for (i = 0; i <= 3; i++) {
       if (
         board[i] == board[i + 3] &&
@@ -56,7 +56,7 @@ const game = (() => {
     }
   };
 
-  const horizontalChecks = function () {
+  const horizontalChecks = () => {
     for (i = 0; i <= 6; i += 3) {
       if (
         board[i] == board[i + 1] &&
@@ -68,7 +68,7 @@ const game = (() => {
     }
   };
 
-  const diagonalChecks = function () {
+  const diagonalChecks = () => {
     if (
       (board[0] == board[4] && board[4] == board[8] && board[0] != undefined) ||
       (board[2] == board[4] && board[4] == board[6] && board[2] != undefined)
