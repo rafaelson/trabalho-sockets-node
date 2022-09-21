@@ -18,7 +18,7 @@ const game = (() => {})();
 
 const displayController = (() => {
   const initializeSquares = (() => {
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", () => {
       const squares = document.querySelectorAll(".square");
       squares.forEach((sq) =>
         sq.addEventListener("click", (e) => {
