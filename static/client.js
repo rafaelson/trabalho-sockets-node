@@ -3,7 +3,7 @@ let currentPlayer;
 
 socket.on("player", (msg) => {
   currentPlayer = msg.player;
-  console.log(currentPlayer);
+  document.querySelector(".player").textContent = `Você é o ${currentPlayer}`;
 });
 
 socket.on("boardUpdate", (b) => displayController.updateBoard(b));
@@ -33,11 +33,11 @@ const displayController = (function () {
     });
   })();
 
-  const initializeResetButton = (function () {
-    document
-      .querySelector(".reset-button")
-      .addEventListener("click", () => game.reset());
-  })();
+  // const initializeResetButton = (function () {
+  //   document
+  //     .querySelector(".reset-button")
+  //     .addEventListener("click", () => game.reset());
+  // })();
 
   const cleanSquares = function () {
     const squares = document.querySelectorAll(".square");

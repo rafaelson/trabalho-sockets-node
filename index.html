@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic Tac Toe</title>
     <script src="/socket.io/socket.io.js"></script>
-    <!-- <script>
-      var socket = io();
-    </script> -->
     <script src="client.js" defer></script>
     <link rel="stylesheet" href="styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,7 +16,8 @@
     />
   </head>
   <body>
-    <input type="button" value="Reset" class="reset-button" />
+    <!-- <input type="button" value="Reset" class="reset-button" /> -->
+    <div class="player"></div>
     <div class="score">Player 1 (X): 0 | Player 2 (O): 0</div>
     <div class="container">
       <div class="square" data-number="0"></div>

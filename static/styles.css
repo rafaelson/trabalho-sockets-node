@@ -27,11 +27,12 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-.reset-button {
+.player {
   position: fixed;
   top: 2.5%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-family: "Roboto", sans-serif;
 }
 
 .score {
