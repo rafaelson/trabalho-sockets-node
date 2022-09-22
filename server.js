@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 let connected = [];
+let toReconnect;
 let id = 0;
 
 app.use(express.static("static"));
@@ -87,26 +88,46 @@ const game = (() => {
     reset();
   };
 
-  return { round };
+  const checkReturn = () => {
+    let element = board.find((element) => element == "X" || element == "O");
+    if (element) {
+      io.emit("boardUpdate", board);
+    }
+  };
+
+  return { checkReturn, round };
 })();
 
 io.on("connection", (socket) => {
   console.log("client conectado");
-  if (id % 2 == 0) {
-    connected.push({ player: "X" });
+  if (id == 0) {
+    connected[0] = { player: "X" };
+    socket.data.player = 1;
   } else {
-    connected.push({ player: "O" });
+    connected[1] = { player: "O" };
+    socket.data.player = 2;
   }
   socket.emit("player", connected[id]);
   id++;
+
+  if (toReconnect) {
+    game.checkReturn();
+    toReconnect = false;
+  }
 
   socket.on("play", (play) => {
     game.round(play);
   });
 
   socket.on("disconnect", () => {
-    if (id > 0) id--;
-    connected.pop();
+    // if (id > 0) id--;
+    if (socket.data.player == 1) {
+      id = 0;
+    } else {
+      id = 1;
+    }
+    connected.splice(id, 1, undefined);
+    toReconnect = true;
     console.log("client desconectado");
   });
 });
