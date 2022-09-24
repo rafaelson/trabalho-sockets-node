@@ -19,6 +19,8 @@ const game = (() => {
   const board = new Array(9).fill(undefined);
   let playNumber = 0;
   let currentPlayer;
+  let player1 = { score: 0 };
+  let player2 = { score: 0 };
 
   const alternatePlayer = (plays) => {
     if (plays % 2 == 0) return "X";
@@ -39,7 +41,7 @@ const game = (() => {
     io.emit("boardUpdate", board);
 
     if (checkBoard()) {
-      win();
+      win(currentPlayer);
     } else if (playNumber == 9 && !checkBoard()) {
       reset();
     }
@@ -85,6 +87,12 @@ const game = (() => {
   };
 
   const win = (player) => {
+    if (player == "X") player1.score++;
+    else player2.score++;
+    io.emit("scoreUpdate", {
+      player1: player1.score,
+      player2: player2.score,
+    });
     reset();
   };
 

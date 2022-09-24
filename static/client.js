@@ -8,6 +8,7 @@ socket.on("player", (msg) => {
 
 socket.on("boardUpdate", (b) => displayController.updateBoard(b));
 socket.on("boardClear", (b) => setTimeout(displayController.cleanSquares, 500));
+socket.on("scoreUpdate", (scores) => displayController.updateScore(scores));
 
 const player = () => {
   let score = 0;
@@ -43,9 +44,9 @@ const displayController = (() => {
     squares.forEach((e) => (e.textContent = ""));
   };
 
-  const updateScore = () => {
+  const updateScore = (scores) => {
     const score = document.querySelector(".score");
-    score.textContent = `Player 1 (X): ${game.player1.score} | Player 2 (O): ${game.player2.score}`;
+    score.textContent = `Player 1 (X): ${scores.player1} | Player 2 (O): ${scores.player2}`;
   };
 
   const changeSquare = (square, play) => {
