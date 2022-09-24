@@ -128,7 +128,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    // if (id > 0) id--;
     if (socket.data.player == 1) {
       id = 0;
     } else {
