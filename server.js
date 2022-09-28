@@ -106,6 +106,7 @@ const game = (() => {
   return { checkReturn, round };
 })();
 
+// modificado do tutorial socket.io: adicionada a lógica do jogo
 io.on("connection", (socket) => {
   console.log("client conectado");
   if (id == 0) {
@@ -139,6 +140,7 @@ io.on("connection", (socket) => {
   });
 });
 
+// modificado do tutorial socket.io: especificar o host
 server.listen(3000, "localhost", () => {
   console.log("escutando em localhost:3000");
 });

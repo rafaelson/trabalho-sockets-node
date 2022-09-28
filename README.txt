@@ -1,0 +1,1 @@
+É necessário realizar o comando "npm install" para instalar as dependências
